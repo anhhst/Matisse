@@ -38,7 +38,9 @@
             android:foreground="?selectableItemBackground"
             android:gravity="center"
             android:textColor="?attr/album.element.color"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            tools:layout_height="wrap_content"
+            tools:textColor="@color/dracula_primary" />
     </androidx.appcompat.widget.Toolbar>
 
     <FrameLayout
@@ -59,7 +61,8 @@
             android:padding="16dp"
             android:text="@string/button_preview"
             android:textColor="?attr/bottomToolbar.preview.textColor"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            tools:textColor="@color/dracula_primary" />
 
         <LinearLayout
             android:padding="16dp"
@@ -89,7 +92,8 @@
                 android:paddingLeft="4dp"
                 android:text="@string/button_original"
                 android:textColor="?attr/bottomToolbar.preview.textColor"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                tools:textColor="@color/dracula_primary" />
 
         </LinearLayout>
 
@@ -102,7 +106,8 @@
             android:foreground="?selectableItemBackground"
             android:padding="16dp"
             android:textColor="?attr/bottomToolbar.apply.textColor"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            tools:textColor="@color/dracula_primary" />
     </FrameLayout>
 
     <FrameLayout
@@ -131,7 +136,8 @@
             android:gravity="center"
             android:text="@string/empty_text"
             android:textColor="?attr/album.emptyView.textColor"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            tools:textColor="@color/dracula_primary" />
 
     </FrameLayout>
 </RelativeLayout>
