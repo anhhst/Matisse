@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   Copyright 2017 Zhihu Inc.
 
   Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,9 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
   -->
-<resources
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:ignore="MissingTranslation">
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="album_name_all">All Media</string>
 
     <string name="button_preview">Preview</string>
@@ -28,6 +25,10 @@
     <string name="button_ok">OK</string>
 
     <string name="error_over_count_default">You have reached max selectable</string>
+    <plurals name="error_over_counts">
+        <item quantity="one">You can only select up to %1$d media file</item>
+        <item quantity="many">You can only select up to %1$d media files</item>
+    </plurals>
     <string name="error_over_count">You can only select up to %1$d media files</string>
     <string name="error_under_quality">Under quality</string>
     <string name="error_over_quality">Over quality</string>
