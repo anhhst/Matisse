@@ -21,6 +21,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
@@ -76,10 +77,17 @@ public class AlbumMediaCollection implements LoaderManager.LoaderCallbacks<Curso
 
     public void onCreate(@NonNull FragmentActivity context, @NonNull AlbumMediaCallbacks callbacks) {
         mContext = new WeakReference<Context>(context);
-        mLoaderManager = context.getSupportLoaderManager();
+        mLoaderManager = LoaderManager.getInstance(context);
         mCallbacks = callbacks;
     }
 
+    public void onCreate(@NonNull FragmentActivity context, Fragment fragment, @NonNull AlbumMediaCallbacks callbacks) {
+        mContext = new WeakReference<Context>(context);
+        mLoaderManager = LoaderManager.getInstance(fragment);
+        mCallbacks = callbacks;
+    }
+
+    //Nâng cấp appcompat lên cao hơn 1.1 thì onDestroy sẽ được gọi sau onCreate
     public void onDestroy() {
         if (mLoaderManager != null) {
             mLoaderManager.destroyLoader(LOADER_ID);
