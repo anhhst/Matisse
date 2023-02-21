@@ -39,6 +39,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.material.button.MaterialButtonToggleGroup;
+import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.R;
 import com.zhihu.matisse.internal.entity.Album;
 import com.zhihu.matisse.internal.entity.Item;
@@ -65,11 +67,11 @@ import java.util.ArrayList;
  * Main Activity to display albums and media content (images/videos) in each album
  * and also support media selecting operations.
  */
-public class MatisseActivity extends AppCompatActivity implements
+public class MatisseTabActivity extends AppCompatActivity implements
         AlbumCollection.AlbumCallbacks, AdapterView.OnItemSelectedListener,
         MediaSelectionFragment.SelectionProvider, View.OnClickListener,
         AlbumMediaAdapter.CheckStateListener, AlbumMediaAdapter.OnMediaClickListener,
-        AlbumMediaAdapter.OnPhotoCapture {
+        AlbumMediaAdapter.OnPhotoCapture, MaterialButtonToggleGroup.OnButtonCheckedListener {
 
     public static final String EXTRA_RESULT_SELECTION = "extra_result_selection";
     public static final String EXTRA_RESULT_SELECTION_PATH = "extra_result_selection_path";
@@ -91,7 +93,9 @@ public class MatisseActivity extends AppCompatActivity implements
 
     private LinearLayout mOriginalLayout;
     private CheckRadioView mOriginal;
+    private MaterialButtonToggleGroup mButtonToggleGroup;
     private boolean mOriginalEnable;
+    private int heightLayoutTypeMedia;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -104,7 +108,7 @@ public class MatisseActivity extends AppCompatActivity implements
             finish();
             return;
         }
-        setContentView(R.layout.activity_matisse);
+        setContentView(R.layout.activity_matisse_tab);
 
         if (mSpec.needOrientationRestriction()) {
             setRequestedOrientation(mSpec.orientation);
@@ -154,6 +158,10 @@ public class MatisseActivity extends AppCompatActivity implements
         mAlbumCollection.onCreate(this, this);
         mAlbumCollection.onRestoreInstanceState(savedInstanceState);
         mAlbumCollection.loadAlbums();
+
+        mButtonToggleGroup = findViewById(R.id.btn_toggle_group);
+        mButtonToggleGroup.addOnButtonCheckedListener(this);
+        paddingRecyclerView();
     }
 
     @Override
@@ -236,11 +244,12 @@ public class MatisseActivity extends AppCompatActivity implements
             result.putStringArrayListExtra(EXTRA_RESULT_SELECTION_PATH, selectedPath);
             setResult(RESULT_OK, result);
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
-                MatisseActivity.this.revokeUriPermission(contentUri,
+                MatisseTabActivity.this.revokeUriPermission(contentUri,
                         Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
             new SingleMediaScanner(this.getApplicationContext(), path, new SingleMediaScanner.ScanListener() {
-                @Override public void onScanFinish() {
+                @Override
+                public void onScanFinish() {
                     Log.i("SingleMediaScanner", "scan finish!");
                 }
             });
@@ -265,17 +274,13 @@ public class MatisseActivity extends AppCompatActivity implements
             mButtonApply.setText(getString(R.string.button_apply, selectedCount));
         }
 
-
         if (mSpec.originalable) {
             mOriginalLayout.setVisibility(View.VISIBLE);
             updateOriginalState();
         } else {
             mOriginalLayout.setVisibility(View.INVISIBLE);
         }
-
-
     }
-
 
     private void updateOriginalState() {
         mOriginal.setChecked(mOriginalEnable);
@@ -371,7 +376,7 @@ public class MatisseActivity extends AppCompatActivity implements
             @Override
             public void run() {
                 cursor.moveToPosition(mAlbumCollection.getCurrentSelection());
-                mAlbumsSpinner.setSelection(MatisseActivity.this,
+                mAlbumsSpinner.setSelection(MatisseTabActivity.this,
                         mAlbumCollection.getCurrentSelection());
                 Album album = Album.valueOf(cursor);
                 if (album.isAll() && SelectionSpec.getInstance().capture) {
@@ -394,12 +399,23 @@ public class MatisseActivity extends AppCompatActivity implements
         } else {
             mContainer.setVisibility(View.VISIBLE);
             mEmptyView.setVisibility(View.GONE);
-            Fragment fragment = MediaSelectionFragment.newInstance(album);
+            Fragment fragment = MediaSelectionFragment.newInstance(album, heightLayoutTypeMedia);
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.container, fragment, MediaSelectionFragment.class.getSimpleName())
                     .commitAllowingStateLoss();
         }
+    }
+
+    private void paddingRecyclerView(){
+        View layoutTypeMedia = findViewById(R.id.layout_type_media);
+        layoutTypeMedia.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                heightLayoutTypeMedia = v.getHeight();
+                layoutTypeMedia.removeOnLayoutChangeListener(this);
+            }
+        });
     }
 
     @Override
@@ -410,6 +426,10 @@ public class MatisseActivity extends AppCompatActivity implements
         if (mSpec.onSelectedListener != null) {
             mSpec.onSelectedListener.onSelected(
                     mSelectedCollection.asListOfUri(), mSelectedCollection.asListOfString());
+        }
+        for (int index = 0; index < mButtonToggleGroup.getChildCount(); index++) {
+            View nextChild = mButtonToggleGroup.getChildAt(index);
+            nextChild.setEnabled(mSelectedCollection.count() == 0);
         }
     }
 
@@ -435,4 +455,16 @@ public class MatisseActivity extends AppCompatActivity implements
         }
     }
 
+    @Override
+    public void onButtonChecked(MaterialButtonToggleGroup group, int checkedId, boolean isChecked) {
+        if (!isChecked) return;
+        if (checkedId == R.id.btn_image) {
+            mSpec.mimeTypeSet = MimeType.ofImage();
+        } else if (checkedId == R.id.btn_video) {
+            mSpec.mimeTypeSet = MimeType.ofVideo();
+        }
+        mAlbumsSpinner.setSelection(this, 0);
+        mAlbumCollection.setStateCurrentSelection(0);
+        mAlbumCollection.restartAlbums();
+    }
 }

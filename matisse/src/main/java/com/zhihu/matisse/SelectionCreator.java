@@ -16,29 +16,6 @@
  */
 package com.zhihu.matisse;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.os.Build;
-import androidx.annotation.IntDef;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
-import androidx.annotation.StyleRes;
-import androidx.fragment.app.Fragment;
-
-import com.zhihu.matisse.engine.ImageEngine;
-import com.zhihu.matisse.filter.Filter;
-import com.zhihu.matisse.internal.entity.CaptureStrategy;
-import com.zhihu.matisse.internal.entity.SelectionSpec;
-import com.zhihu.matisse.listener.OnCheckedListener;
-import com.zhihu.matisse.listener.OnSelectedListener;
-import com.zhihu.matisse.ui.MatisseActivity;
-
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.util.ArrayList;
-import java.util.Set;
-
 import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_BEHIND;
 import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR;
 import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_FULL_USER;
@@ -55,6 +32,30 @@ import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
 import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_USER;
 import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_USER_LANDSCAPE;
 import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT;
+
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Build;
+
+import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.annotation.StyleRes;
+import androidx.fragment.app.Fragment;
+
+import com.zhihu.matisse.engine.ImageEngine;
+import com.zhihu.matisse.filter.Filter;
+import com.zhihu.matisse.internal.entity.CaptureStrategy;
+import com.zhihu.matisse.internal.entity.SelectionSpec;
+import com.zhihu.matisse.listener.OnCheckedListener;
+import com.zhihu.matisse.listener.OnSelectedListener;
+import com.zhihu.matisse.ui.MatisseTabActivity;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.util.ArrayList;
+import java.util.Set;
 
 /**
  * Fluent API for building media select specification.
@@ -354,7 +355,7 @@ public final class SelectionCreator {
             return;
         }
 
-        Intent intent = new Intent(activity, MatisseActivity.class);
+        Intent intent = new Intent(activity, MatisseTabActivity.class);
 
         Fragment fragment = mMatisse.getFragment();
         if (fragment != null) {

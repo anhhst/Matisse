@@ -19,6 +19,7 @@ package com.zhihu.matisse.internal.model;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
+
 import androidx.fragment.app.FragmentActivity;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
@@ -96,6 +97,10 @@ public class AlbumCollection implements LoaderManager.LoaderCallbacks<Cursor> {
 
     public void loadAlbums() {
         mLoaderManager.initLoader(LOADER_ID, null, this);
+    }
+
+    public void restartAlbums(){
+        mLoaderManager.restartLoader(LOADER_ID, null, this);
     }
 
     public int getCurrentSelection() {

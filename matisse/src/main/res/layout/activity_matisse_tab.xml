@@ -14,6 +14,7 @@
   limitations under the License.
   -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root"
     android:layout_width="match_parent"
@@ -31,8 +32,8 @@
         <TextView
             android:id="@+id/selected_album"
             android:layout_width="wrap_content"
-            android:layout_gravity="center_horizontal"
             android:layout_height="?actionBarSize"
+            android:layout_gravity="center_horizontal"
             android:drawableRight="@drawable/ic_arrow_drop_down_white_24dp"
             android:foreground="?selectableItemBackground"
             android:gravity="center"
@@ -64,23 +65,23 @@
             tools:textColor="@color/dracula_primary" />
 
         <LinearLayout
-            android:padding="16dp"
             android:id="@+id/originalLayout"
-            android:visibility="visible"
-            android:orientation="horizontal"
-            android:layout_gravity="center"
             android:layout_width="wrap_content"
-            android:foreground="?selectableItemBackground"
             android:layout_height="wrap_content"
-            tools:showIn="@layout/activity_matisse">
+            android:layout_gravity="center"
+            android:foreground="?selectableItemBackground"
+            android:orientation="horizontal"
+            android:padding="16dp"
+            android:visibility="visible"
+            tools:showIn="@layout/activity_matisse_tab">
 
 
             <com.zhihu.matisse.internal.ui.widget.CheckRadioView
                 android:id="@+id/original"
-                android:src="@drawable/ic_preview_radio_off"
-                android:layout_gravity="center_vertical"
                 android:layout_width="16dp"
-                android:layout_height="16dp" />
+                android:layout_height="16dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_preview_radio_off" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -95,7 +96,6 @@
                 tools:textColor="@color/dracula_primary" />
 
         </LinearLayout>
-
 
         <TextView
             android:id="@+id/button_apply"
@@ -115,7 +115,8 @@
         android:layout_height="match_parent"
         android:layout_above="@id/bottom_toolbar"
         android:layout_below="@id/toolbar"
-        android:visibility="gone" />
+        android:visibility="gone"
+        tools:visibility="visible" />
 
     <FrameLayout
         android:id="@+id/empty_view"
@@ -130,8 +131,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:drawablePadding="8dp"
             android:drawableTop="?attr/album.emptyView"
+            android:drawablePadding="8dp"
             android:gravity="center"
             android:text="@string/empty_text"
             android:textColor="?attr/album.emptyView.textColor"
@@ -139,4 +140,36 @@
             tools:textColor="@color/dracula_primary" />
 
     </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/layout_type_media"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar">
+
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/btn_toggle_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            app:checkedButton="@+id/btn_image"
+            app:selectionRequired="true"
+            app:singleSelection="true">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_image"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ảnh" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_video"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Video" />
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+    </FrameLayout>
+
 </RelativeLayout>

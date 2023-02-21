@@ -18,15 +18,14 @@ package com.zhihu.matisse.internal.ui;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.zhihu.matisse.R;
 import com.zhihu.matisse.internal.entity.Album;
@@ -43,6 +42,7 @@ public class MediaSelectionFragment extends Fragment implements
         AlbumMediaAdapter.OnMediaClickListener {
 
     public static final String EXTRA_ALBUM = "extra_album";
+    public static final String EXTRA_PADDING_TOP = "extra_padding_top";
 
     private final AlbumMediaCollection mAlbumMediaCollection = new AlbumMediaCollection();
     private RecyclerView mRecyclerView;
@@ -55,6 +55,15 @@ public class MediaSelectionFragment extends Fragment implements
         MediaSelectionFragment fragment = new MediaSelectionFragment();
         Bundle args = new Bundle();
         args.putParcelable(EXTRA_ALBUM, album);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static MediaSelectionFragment newInstance(Album album, int paddingTop) {
+        MediaSelectionFragment fragment = new MediaSelectionFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(EXTRA_ALBUM, album);
+        args.putInt(EXTRA_PADDING_TOP, paddingTop);
         fragment.setArguments(args);
         return fragment;
     }
@@ -108,6 +117,18 @@ public class MediaSelectionFragment extends Fragment implements
         }
         mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), spanCount));
 
+//        int paddingTop = getArguments().getInt(EXTRA_PADDING_TOP);
+//        if (paddingTop > 0) {
+//            mRecyclerView.setPadding(
+//                    mRecyclerView.getPaddingLeft(),
+//                    paddingTop,
+//                    mRecyclerView.getPaddingRight(),
+//                    mRecyclerView.getPaddingBottom()
+//            );
+//            mRecyclerView.setClipToPadding(true);
+//        } else {
+//            mRecyclerView.setClipToPadding(false);
+//        }
         int spacing = getResources().getDimensionPixelSize(R.dimen.media_grid_spacing);
         mRecyclerView.addItemDecoration(new MediaGridInset(spanCount, spacing, false));
         mRecyclerView.setAdapter(mAdapter);
