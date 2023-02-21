@@ -18,7 +18,7 @@
 
     //====================================== Theme Zhihu ===========================================
 
-    <style name="Matisse.Zhihu" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <style name="Matisse.Zhihu" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/zhihu_primary</item>
         <item name="colorPrimaryDark">@color/zhihu_primary_dark</item>
         <item name="toolbar">@style/Toolbar.Zhihu</item>

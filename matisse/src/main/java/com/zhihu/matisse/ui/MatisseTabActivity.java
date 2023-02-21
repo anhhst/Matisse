@@ -39,7 +39,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
-import com.google.android.material.button.MaterialButtonToggleGroup;
+import com.google.android.material.tabs.TabLayout;
 import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.R;
 import com.zhihu.matisse.internal.entity.Album;
@@ -71,7 +71,7 @@ public class MatisseTabActivity extends AppCompatActivity implements
         AlbumCollection.AlbumCallbacks, AdapterView.OnItemSelectedListener,
         MediaSelectionFragment.SelectionProvider, View.OnClickListener,
         AlbumMediaAdapter.CheckStateListener, AlbumMediaAdapter.OnMediaClickListener,
-        AlbumMediaAdapter.OnPhotoCapture, MaterialButtonToggleGroup.OnButtonCheckedListener {
+        AlbumMediaAdapter.OnPhotoCapture, TabLayout.OnTabSelectedListener {
 
     public static final String EXTRA_RESULT_SELECTION = "extra_result_selection";
     public static final String EXTRA_RESULT_SELECTION_PATH = "extra_result_selection_path";
@@ -93,9 +93,8 @@ public class MatisseTabActivity extends AppCompatActivity implements
 
     private LinearLayout mOriginalLayout;
     private CheckRadioView mOriginal;
-    private MaterialButtonToggleGroup mButtonToggleGroup;
+    private TabLayout mButtonToggleGroup;
     private boolean mOriginalEnable;
-    private int heightLayoutTypeMedia;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -146,6 +145,9 @@ public class MatisseTabActivity extends AppCompatActivity implements
         if (savedInstanceState != null) {
             mOriginalEnable = savedInstanceState.getBoolean(CHECK_STATE);
         }
+        mButtonToggleGroup = (TabLayout) findViewById(R.id.btn_toggle_group);
+        mButtonToggleGroup.addOnTabSelectedListener(this);
+
         updateBottomToolbar();
 
         mAlbumsAdapter = new AlbumsAdapter(this, null, false);
@@ -158,10 +160,6 @@ public class MatisseTabActivity extends AppCompatActivity implements
         mAlbumCollection.onCreate(this, this);
         mAlbumCollection.onRestoreInstanceState(savedInstanceState);
         mAlbumCollection.loadAlbums();
-
-        mButtonToggleGroup = findViewById(R.id.btn_toggle_group);
-        mButtonToggleGroup.addOnButtonCheckedListener(this);
-        paddingRecyclerView();
     }
 
     @Override
@@ -279,6 +277,12 @@ public class MatisseTabActivity extends AppCompatActivity implements
             updateOriginalState();
         } else {
             mOriginalLayout.setVisibility(View.INVISIBLE);
+        }
+
+        LinearLayout tabStrip = ((LinearLayout)mButtonToggleGroup.getChildAt(0));
+        for (int index = 0; index < tabStrip.getChildCount(); index++) {
+            View nextChild = tabStrip.getChildAt(index);
+            nextChild.setEnabled(mSelectedCollection.count() == 0);
         }
     }
 
@@ -399,23 +403,12 @@ public class MatisseTabActivity extends AppCompatActivity implements
         } else {
             mContainer.setVisibility(View.VISIBLE);
             mEmptyView.setVisibility(View.GONE);
-            Fragment fragment = MediaSelectionFragment.newInstance(album, heightLayoutTypeMedia);
+            Fragment fragment = MediaSelectionFragment.newInstance(album);
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.container, fragment, MediaSelectionFragment.class.getSimpleName())
                     .commitAllowingStateLoss();
         }
-    }
-
-    private void paddingRecyclerView(){
-        View layoutTypeMedia = findViewById(R.id.layout_type_media);
-        layoutTypeMedia.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
-            @Override
-            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                heightLayoutTypeMedia = v.getHeight();
-                layoutTypeMedia.removeOnLayoutChangeListener(this);
-            }
-        });
     }
 
     @Override
@@ -426,10 +419,6 @@ public class MatisseTabActivity extends AppCompatActivity implements
         if (mSpec.onSelectedListener != null) {
             mSpec.onSelectedListener.onSelected(
                     mSelectedCollection.asListOfUri(), mSelectedCollection.asListOfString());
-        }
-        for (int index = 0; index < mButtonToggleGroup.getChildCount(); index++) {
-            View nextChild = mButtonToggleGroup.getChildAt(index);
-            nextChild.setEnabled(mSelectedCollection.count() == 0);
         }
     }
 
@@ -456,15 +445,23 @@ public class MatisseTabActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onButtonChecked(MaterialButtonToggleGroup group, int checkedId, boolean isChecked) {
-        if (!isChecked) return;
-        if (checkedId == R.id.btn_image) {
+    public void onTabSelected(TabLayout.Tab tab) {
+        int position = tab.getPosition();
+        if (position == 0) {
             mSpec.mimeTypeSet = MimeType.ofImage();
-        } else if (checkedId == R.id.btn_video) {
+        } else if (position == 1) {
             mSpec.mimeTypeSet = MimeType.ofVideo();
         }
         mAlbumsSpinner.setSelection(this, 0);
         mAlbumCollection.setStateCurrentSelection(0);
         mAlbumCollection.restartAlbums();
+    }
+
+    @Override
+    public void onTabUnselected(TabLayout.Tab tab) {
+    }
+
+    @Override
+    public void onTabReselected(TabLayout.Tab tab) {
     }
 }

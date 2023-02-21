@@ -26,7 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?colorPrimary"
-        android:elevation="4dp"
+        android:elevation="0dp"
         android:theme="?toolbar">
 
         <TextView
@@ -114,7 +114,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/bottom_toolbar"
-        android:layout_below="@id/toolbar"
+        android:layout_below="@id/layout_type_media"
         android:visibility="gone"
         tools:visibility="visible" />
 
@@ -123,7 +123,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/bottom_toolbar"
-        android:layout_below="@id/toolbar"
+        android:layout_below="@id/layout_type_media"
         android:visibility="gone">
 
         <TextView
@@ -144,32 +144,31 @@
     <FrameLayout
         android:id="@+id/layout_type_media"
         android:layout_width="match_parent"
+        android:background="?colorPrimary"
         android:layout_height="wrap_content"
         android:layout_below="@id/toolbar">
 
-        <com.google.android.material.button.MaterialButtonToggleGroup
+        <com.google.android.material.tabs.TabLayout
             android:id="@+id/btn_toggle_group"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            app:checkedButton="@+id/btn_image"
-            app:selectionRequired="true"
-            app:singleSelection="true">
+            app:tabMode="scrollable"
+            app:tabIndicatorFullWidth="false"
+            app:tabIndicatorAnimationDuration="0"
+            android:layout_gravity="center_horizontal">
 
-            <com.google.android.material.button.MaterialButton
+            <com.google.android.material.tabs.TabItem
                 android:id="@+id/btn_image"
-                style="?attr/materialButtonOutlinedStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Ảnh" />
 
-            <com.google.android.material.button.MaterialButton
+            <com.google.android.material.tabs.TabItem
                 android:id="@+id/btn_video"
-                style="?attr/materialButtonOutlinedStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Video" />
-        </com.google.android.material.button.MaterialButtonToggleGroup>
+        </com.google.android.material.tabs.TabLayout>
     </FrameLayout>
 
 </RelativeLayout>
