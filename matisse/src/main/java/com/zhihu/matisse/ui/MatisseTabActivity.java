@@ -15,6 +15,7 @@
  */
 package com.zhihu.matisse.ui;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.TypedArray;
@@ -28,10 +29,12 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -73,11 +76,11 @@ public class MatisseTabActivity extends AppCompatActivity implements
         AlbumMediaAdapter.CheckStateListener, AlbumMediaAdapter.OnMediaClickListener,
         AlbumMediaAdapter.OnPhotoCapture, TabLayout.OnTabSelectedListener {
 
-    public static final String EXTRA_RESULT_SELECTION = "extra_result_selection";
-    public static final String EXTRA_RESULT_SELECTION_PATH = "extra_result_selection_path";
-    public static final String EXTRA_RESULT_ORIGINAL_ENABLE = "extra_result_original_enable";
+
     private static final int REQUEST_CODE_PREVIEW = 23;
     private static final int REQUEST_CODE_CAPTURE = 24;
+
+    private static final int REQUEST_CODE_RECORD = 25;
     public static final String CHECK_STATE = "checkState";
     private final AlbumCollection mAlbumCollection = new AlbumCollection();
     private MediaStoreCompat mMediaStoreCompat;
@@ -215,9 +218,9 @@ public class MatisseTabActivity extends AppCompatActivity implements
                         selectedPaths.add(PathUtils.getPath(this, item.getContentUri()));
                     }
                 }
-                result.putParcelableArrayListExtra(EXTRA_RESULT_SELECTION, selectedUris);
-                result.putStringArrayListExtra(EXTRA_RESULT_SELECTION_PATH, selectedPaths);
-                result.putExtra(EXTRA_RESULT_ORIGINAL_ENABLE, mOriginalEnable);
+                result.putParcelableArrayListExtra(Constant.EXTRA_RESULT_SELECTION, selectedUris);
+                result.putStringArrayListExtra(Constant.EXTRA_RESULT_SELECTION_PATH, selectedPaths);
+                result.putExtra(Constant.EXTRA_RESULT_ORIGINAL_ENABLE, mOriginalEnable);
                 setResult(RESULT_OK, result);
                 finish();
             } else {
@@ -238,8 +241,8 @@ public class MatisseTabActivity extends AppCompatActivity implements
             ArrayList<String> selectedPath = new ArrayList<>();
             selectedPath.add(path);
             Intent result = new Intent();
-            result.putParcelableArrayListExtra(EXTRA_RESULT_SELECTION, selected);
-            result.putStringArrayListExtra(EXTRA_RESULT_SELECTION_PATH, selectedPath);
+            result.putParcelableArrayListExtra(Constant.EXTRA_RESULT_SELECTION, selected);
+            result.putStringArrayListExtra(Constant.EXTRA_RESULT_SELECTION_PATH, selectedPath);
             setResult(RESULT_OK, result);
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
                 MatisseTabActivity.this.revokeUriPermission(contentUri,
@@ -251,6 +254,16 @@ public class MatisseTabActivity extends AppCompatActivity implements
                     Log.i("SingleMediaScanner", "scan finish!");
                 }
             });
+            finish();
+        } else if (requestCode == REQUEST_CODE_RECORD) {
+            Intent result = new Intent();
+            ArrayList<Uri> selected = new ArrayList<>();
+            selected.add(data.getData());
+            ArrayList<String> selectedPath = new ArrayList<>();
+            selectedPath.add(PathUtils.getPath(this, data.getData()));
+            result.putParcelableArrayListExtra(Constant.EXTRA_RESULT_SELECTION, selected);
+            result.putStringArrayListExtra(Constant.EXTRA_RESULT_SELECTION_PATH, selectedPath);
+            setResult(RESULT_OK, result);
             finish();
         }
     }
@@ -279,12 +292,26 @@ public class MatisseTabActivity extends AppCompatActivity implements
             mOriginalLayout.setVisibility(View.INVISIBLE);
         }
 
-        LinearLayout tabStrip = ((LinearLayout)mButtonToggleGroup.getChildAt(0));
+        LinearLayout tabStrip = ((LinearLayout) mButtonToggleGroup.getChildAt(0));
         for (int index = 0; index < tabStrip.getChildCount(); index++) {
             View nextChild = tabStrip.getChildAt(index);
-            nextChild.setEnabled(mSelectedCollection.count() == 0);
+            nextChild.setClickable(mSelectedCollection.count() == 0);
+            if (mSelectedCollection.count() > 0 && !nextChild.isSelected()) {
+                nextChild.setOnTouchListener(onClickTabListener);
+            } else {
+                nextChild.setOnTouchListener(null);
+            }
         }
     }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private final View.OnTouchListener onClickTabListener = (v, event) -> {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            Toast.makeText(this, R.string.you_can_only_choose_photos_or_videos, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return false;
+    };
 
     private void updateOriginalState() {
         mOriginal.setChecked(mOriginalEnable);
@@ -329,10 +356,10 @@ public class MatisseTabActivity extends AppCompatActivity implements
         } else if (v.getId() == R.id.button_apply) {
             Intent result = new Intent();
             ArrayList<Uri> selectedUris = (ArrayList<Uri>) mSelectedCollection.asListOfUri();
-            result.putParcelableArrayListExtra(EXTRA_RESULT_SELECTION, selectedUris);
+            result.putParcelableArrayListExtra(Constant.EXTRA_RESULT_SELECTION, selectedUris);
             ArrayList<String> selectedPaths = (ArrayList<String>) mSelectedCollection.asListOfString();
-            result.putStringArrayListExtra(EXTRA_RESULT_SELECTION_PATH, selectedPaths);
-            result.putExtra(EXTRA_RESULT_ORIGINAL_ENABLE, mOriginalEnable);
+            result.putStringArrayListExtra(Constant.EXTRA_RESULT_SELECTION_PATH, selectedPaths);
+            result.putExtra(Constant.EXTRA_RESULT_ORIGINAL_ENABLE, mOriginalEnable);
             setResult(RESULT_OK, result);
             finish();
         } else if (v.getId() == R.id.originalLayout) {
@@ -440,7 +467,11 @@ public class MatisseTabActivity extends AppCompatActivity implements
     @Override
     public void capture() {
         if (mMediaStoreCompat != null) {
-            mMediaStoreCompat.dispatchCaptureIntent(this, REQUEST_CODE_CAPTURE);
+            if (mSpec.mimeTypeSet.contains(MimeType.JPEG)) {
+                mMediaStoreCompat.dispatchCaptureIntent(this, REQUEST_CODE_CAPTURE);
+            } else if (mSpec.mimeTypeSet.contains(MimeType.MP4)){
+                mMediaStoreCompat.dispatchRecordIntent(this, REQUEST_CODE_RECORD);
+            }
         }
     }
 

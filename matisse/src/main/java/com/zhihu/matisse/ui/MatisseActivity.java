@@ -71,9 +71,6 @@ public class MatisseActivity extends AppCompatActivity implements
         AlbumMediaAdapter.CheckStateListener, AlbumMediaAdapter.OnMediaClickListener,
         AlbumMediaAdapter.OnPhotoCapture {
 
-    public static final String EXTRA_RESULT_SELECTION = "extra_result_selection";
-    public static final String EXTRA_RESULT_SELECTION_PATH = "extra_result_selection_path";
-    public static final String EXTRA_RESULT_ORIGINAL_ENABLE = "extra_result_original_enable";
     private static final int REQUEST_CODE_PREVIEW = 23;
     private static final int REQUEST_CODE_CAPTURE = 24;
     public static final String CHECK_STATE = "checkState";
@@ -209,9 +206,9 @@ public class MatisseActivity extends AppCompatActivity implements
                         selectedPaths.add(PathUtils.getPath(this, item.getContentUri()));
                     }
                 }
-                result.putParcelableArrayListExtra(EXTRA_RESULT_SELECTION, selectedUris);
-                result.putStringArrayListExtra(EXTRA_RESULT_SELECTION_PATH, selectedPaths);
-                result.putExtra(EXTRA_RESULT_ORIGINAL_ENABLE, mOriginalEnable);
+                result.putParcelableArrayListExtra(Constant.EXTRA_RESULT_SELECTION, selectedUris);
+                result.putStringArrayListExtra(Constant.EXTRA_RESULT_SELECTION_PATH, selectedPaths);
+                result.putExtra(Constant.EXTRA_RESULT_ORIGINAL_ENABLE, mOriginalEnable);
                 setResult(RESULT_OK, result);
                 finish();
             } else {
@@ -232,8 +229,8 @@ public class MatisseActivity extends AppCompatActivity implements
             ArrayList<String> selectedPath = new ArrayList<>();
             selectedPath.add(path);
             Intent result = new Intent();
-            result.putParcelableArrayListExtra(EXTRA_RESULT_SELECTION, selected);
-            result.putStringArrayListExtra(EXTRA_RESULT_SELECTION_PATH, selectedPath);
+            result.putParcelableArrayListExtra(Constant.EXTRA_RESULT_SELECTION, selected);
+            result.putStringArrayListExtra(Constant.EXTRA_RESULT_SELECTION_PATH, selectedPath);
             setResult(RESULT_OK, result);
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
                 MatisseActivity.this.revokeUriPermission(contentUri,
@@ -320,10 +317,10 @@ public class MatisseActivity extends AppCompatActivity implements
         } else if (v.getId() == R.id.button_apply) {
             Intent result = new Intent();
             ArrayList<Uri> selectedUris = (ArrayList<Uri>) mSelectedCollection.asListOfUri();
-            result.putParcelableArrayListExtra(EXTRA_RESULT_SELECTION, selectedUris);
+            result.putParcelableArrayListExtra(Constant.EXTRA_RESULT_SELECTION, selectedUris);
             ArrayList<String> selectedPaths = (ArrayList<String>) mSelectedCollection.asListOfString();
-            result.putStringArrayListExtra(EXTRA_RESULT_SELECTION_PATH, selectedPaths);
-            result.putExtra(EXTRA_RESULT_ORIGINAL_ENABLE, mOriginalEnable);
+            result.putStringArrayListExtra(Constant.EXTRA_RESULT_SELECTION_PATH, selectedPaths);
+            result.putExtra(Constant.EXTRA_RESULT_ORIGINAL_ENABLE, mOriginalEnable);
             setResult(RESULT_OK, result);
             finish();
         } else if (v.getId() == R.id.originalLayout) {

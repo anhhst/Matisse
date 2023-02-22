@@ -20,4 +20,6 @@
     <string name="error_type_conflict">Không thể chọn hình ảnh và video cùng một lúc</string>
     <string name="error_under_quality">Chất lượng thấp</string>
     <string name="photo_grid_capture">Camera</string>
+    <string name="image">Ảnh</string>
+    <string name="you_can_only_choose_photos_or_videos">Bạn chỉ được chọn ảnh hoặc video</string>
 </resources>

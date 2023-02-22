@@ -40,4 +40,7 @@
     <string name="button_original">Original</string>
     <string name="button_sure_default">Sure</string>
     <string name="button_sure">Sure(%1$d)</string>
+    <string name="image">Image</string>
+    <string name="video">Video</string>
+    <string name="you_can_only_choose_photos_or_videos">You can only choose photos or videos</string>
 </resources>

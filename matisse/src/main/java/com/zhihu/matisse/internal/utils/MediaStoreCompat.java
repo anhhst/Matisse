@@ -24,9 +24,10 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
-import androidx.fragment.app.Fragment;
+
 import androidx.core.content.FileProvider;
 import androidx.core.os.EnvironmentCompat;
+import androidx.fragment.app.Fragment;
 
 import com.zhihu.matisse.internal.entity.CaptureStrategy;
 
@@ -70,7 +71,16 @@ public class MediaStoreCompat {
     public void setCaptureStrategy(CaptureStrategy strategy) {
         mCaptureStrategy = strategy;
     }
-
+    public void dispatchRecordIntent(Context context, int requestCode) {
+        Intent captureIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+        if (captureIntent.resolveActivity(context.getPackageManager()) != null) {
+            if (mFragment != null) {
+                mFragment.get().startActivityForResult(captureIntent, requestCode);
+            } else {
+                mContext.get().startActivityForResult(captureIntent, requestCode);
+            }
+        }
+    }
     public void dispatchCaptureIntent(Context context, int requestCode) {
         Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (captureIntent.resolveActivity(context.getPackageManager()) != null) {

@@ -50,6 +50,7 @@ import com.zhihu.matisse.internal.entity.CaptureStrategy;
 import com.zhihu.matisse.internal.entity.SelectionSpec;
 import com.zhihu.matisse.listener.OnCheckedListener;
 import com.zhihu.matisse.listener.OnSelectedListener;
+import com.zhihu.matisse.ui.MatisseActivity;
 import com.zhihu.matisse.ui.MatisseTabActivity;
 
 import java.lang.annotation.Retention;
@@ -355,6 +356,22 @@ public final class SelectionCreator {
             return;
         }
 
+        Intent intent = new Intent(activity, MatisseActivity.class);
+
+        Fragment fragment = mMatisse.getFragment();
+        if (fragment != null) {
+            fragment.startActivityForResult(intent, requestCode);
+        } else {
+            activity.startActivityForResult(intent, requestCode);
+        }
+    }
+
+    public void forResultTab(int requestCode) {
+        Activity activity = mMatisse.getActivity();
+        if (activity == null) {
+            return;
+        }
+
         Intent intent = new Intent(activity, MatisseTabActivity.class);
 
         Fragment fragment = mMatisse.getFragment();
@@ -364,6 +381,7 @@ public final class SelectionCreator {
             activity.startActivityForResult(intent, requestCode);
         }
     }
+
 
     public SelectionCreator showPreview(boolean showPreview) {
         mSelectionSpec.showPreview = showPreview;

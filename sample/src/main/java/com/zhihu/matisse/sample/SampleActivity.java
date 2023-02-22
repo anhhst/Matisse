@@ -104,7 +104,7 @@ public class SampleActivity extends AppCompatActivity implements View.OnClickLis
                         .setOnCheckedListener(isChecked -> {
                             Log.e("isChecked", "onCheck: isChecked=" + isChecked);
                         })
-                        .forResult(REQUEST_CODE_CHOOSE);
+                        .forResultTab(REQUEST_CODE_CHOOSE);
                 break;
             case R.id.dracula:
                 Matisse.from(SampleActivity.this)
@@ -116,7 +116,7 @@ public class SampleActivity extends AppCompatActivity implements View.OnClickLis
                         .originalEnable(true)
                         .maxOriginalSize(10)
                         .imageEngine(new PicassoEngine())
-                        .forResult(REQUEST_CODE_CHOOSE);
+                        .forResultTab(REQUEST_CODE_CHOOSE);
                 break;
             case R.id.only_gif:
                 Matisse.from(SampleActivity.this)
@@ -133,7 +133,7 @@ public class SampleActivity extends AppCompatActivity implements View.OnClickLis
                         .originalEnable(true)
                         .maxOriginalSize(10)
                         .autoHideToolbarOnSingleTap(true)
-                        .forResult(REQUEST_CODE_CHOOSE);
+                        .forResultTab(REQUEST_CODE_CHOOSE);
                 break;
             default:
                 break;

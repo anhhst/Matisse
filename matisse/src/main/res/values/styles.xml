@@ -20,7 +20,7 @@
 
     <style name="Matisse.Zhihu" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/zhihu_primary</item>
-        <item name="colorPrimaryDark">@color/zhihu_primary_dark</item>
+        <item name="colorPrimaryDark">@color/zhihu_primary</item>
         <item name="toolbar">@style/Toolbar.Zhihu</item>
         <item name="album.dropdown.title.color">@color/zhihu_album_dropdown_title_text</item>
         <item name="album.dropdown.count.color">@color/zhihu_album_dropdown_count_text</item>
@@ -53,7 +53,7 @@
 
     <style name="Matisse.Dracula" parent="Theme.AppCompat.NoActionBar">
         <item name="colorPrimary">@color/dracula_primary</item>
-        <item name="colorPrimaryDark">@color/dracula_primary_dark</item>
+        <item name="colorPrimaryDark">@color/dracula_primary</item>
         <item name="toolbar">@style/Toolbar.Dracula</item>
         <item name="album.dropdown.title.color">@color/dracula_album_dropdown_title_text</item>
         <item name="album.dropdown.count.color">@color/dracula_album_dropdown_count_text</item>
@@ -82,5 +82,8 @@
     <style name="Popup.Dracula" parent="Widget.AppCompat.ListPopupWindow">
         <item name="android:popupBackground">@color/dracula_album_popup_bg</item>
     </style>
-
+    <style name="TabTextAppearance" parent="TextAppearance.Design.Tab">
+        <item name="textAllCaps">false</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
 </resources>

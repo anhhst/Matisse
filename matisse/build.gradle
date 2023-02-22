@@ -15,7 +15,7 @@
  */
 apply plugin: 'com.android.library'
 apply plugin: 'checkstyle'
-
+apply plugin: 'maven-publish'
 android {
     compileSdkVersion 29
     buildToolsVersion '29.0.2'
@@ -70,4 +70,21 @@ task checkstyle(type:Checkstyle) {
     showViolations true
     classpath = files()
     source 'src/main/java'
+}
+
+def artifactId = 'Matisse'
+def groupId = 'com.github.anhhst'
+
+project.afterEvaluate {
+    publishing {
+        publications {
+            library(MavenPublication) {
+                setGroupId(groupId)
+                setArtifactId(artifactId)
+                version '0.5.3-tab-image-video'
+
+                artifact(bundleReleaseAar)
+            }
+        }
+    }
 }

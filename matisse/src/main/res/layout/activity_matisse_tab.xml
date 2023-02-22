@@ -152,6 +152,7 @@
             android:id="@+id/btn_toggle_group"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:tabTextAppearance="@style/TabTextAppearance"
             app:tabMode="scrollable"
             app:tabIndicatorFullWidth="false"
             app:tabIndicatorAnimationDuration="0"
@@ -161,13 +162,13 @@
                 android:id="@+id/btn_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Ảnh" />
+                android:text="@string/image" />
 
             <com.google.android.material.tabs.TabItem
                 android:id="@+id/btn_video"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Video" />
+                android:text="@string/video" />
         </com.google.android.material.tabs.TabLayout>
     </FrameLayout>
 
