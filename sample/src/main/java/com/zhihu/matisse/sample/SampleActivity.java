@@ -17,6 +17,7 @@ package com.zhihu.matisse.sample;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
@@ -144,10 +145,15 @@ public class SampleActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        List<Uri> uris = Matisse.obtainResult(data);
         if (requestCode == REQUEST_CODE_CHOOSE && resultCode == RESULT_OK) {
-            mAdapter.setData(Matisse.obtainResult(data), Matisse.obtainPathResult(data));
+            mAdapter.setData(uris, Matisse.obtainPathResult(data));
             Log.e("OnActivityResult ", String.valueOf(Matisse.obtainOriginalState(data)));
         }
+        ContentResolver cR = this.getContentResolver();
+        Uri uri = uris.get(0);
+        String type = cR.getType(uri);
+        Log.d(SampleActivity.class.getSimpleName(), type);
     }
 
     private static class UriAdapter extends RecyclerView.Adapter<UriAdapter.UriViewHolder> {

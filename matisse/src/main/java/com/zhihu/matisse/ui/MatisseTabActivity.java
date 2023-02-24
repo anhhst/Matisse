@@ -82,6 +82,7 @@ public class MatisseTabActivity extends AppCompatActivity implements
 
     private static final int REQUEST_CODE_RECORD = 25;
     public static final String CHECK_STATE = "checkState";
+    public static final String MAX_SELECTABLE = "maxSelectable";
     private final AlbumCollection mAlbumCollection = new AlbumCollection();
     private MediaStoreCompat mMediaStoreCompat;
     private SelectedItemCollection mSelectedCollection = new SelectedItemCollection(this);
@@ -170,7 +171,7 @@ public class MatisseTabActivity extends AppCompatActivity implements
         super.onSaveInstanceState(outState);
         mSelectedCollection.onSaveInstanceState(outState);
         mAlbumCollection.onSaveInstanceState(outState);
-        outState.putBoolean("checkState", mOriginalEnable);
+        outState.putBoolean(CHECK_STATE, mOriginalEnable);
     }
 
     @Override
